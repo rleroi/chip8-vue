@@ -1,5 +1,7 @@
 # chip8-vue
 
+![](https://trengo.s3.eu-central-1.amazonaws.com/media/t9BmwJCF0C6dcmAl_output.gif)
+
 ## Project setup
 ```
 yarn install
