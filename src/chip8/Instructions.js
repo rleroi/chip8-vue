@@ -682,12 +682,20 @@ export default [
             },
         ],
         execute(operands) {
+            // todo: debug, fails test rom: https://github.com/corax89/chip8-test-rom
+            debugger;
+
             let [x] = operands;
 
+            console.log('LD_B_VX before', memory[cpu.i], memory[cpu.i + 1], memory[cpu.i + 2]);
+
             const value = cpu.registers[x].toString();
+            console.log(value);
             memory[cpu.i] = Number(value.charAt(0) || 0);
             memory[cpu.i + 1] = Number(value.charAt(1) || 0);
             memory[cpu.i + 2] = Number(value.charAt(3) || 0);
+
+            console.log('LD_B_VX after', memory[cpu.i], memory[cpu.i + 1], memory[cpu.i + 2]);
         }
     },
     {
@@ -702,6 +710,11 @@ export default [
             },
         ],
         execute(operands) {
+            // todo: debug, fails test rom: https://github.com/corax89/chip8-test-rom
+            debugger;
+
+            console.log('LD_I_VX');
+
             let [x] = operands;
 
             for(let i = 0; i < x; i++) {

@@ -31,7 +31,8 @@
             <button @click="loadRom">Restart</button>
             <button @click="pause">Pause</button>
             <button @click="start">Continue</button>
-            <button @click="jump">Skip</button>
+            <button @click="skip">Skip</button>
+            <button @click="jump">Jump</button>
             <input type="range" :min="0" :max="1000" v-model="emulator.deltaTime" />
             <span>delay: {{emulator.deltaTime}}</span>
         </div>
@@ -81,7 +82,10 @@
                     }, {
                         name: 'Random Number Test',
                         rom: '00e0c0ffa224f033f265f02960006300d035f1296005d035f229600ad035f00a1200',
-                    },
+                    }, {
+                        name: 'Opcode Test',
+                        rom: '124eeaacaaeaceaaaaaee0a0a0e0c04040e0e020c0e0e06020e0a0e0202060402040e080e0e0e0202020e0e0a0e0e0e020e040a0e0a0e0c080e0e080c080a040a0a0a202dab400eea202dab413dc680169056a0a6b01652a662ba216d8b4a23ed9b4a202362ba206dab46b06a21ad8b4a23ed9b4a206452aa202dab46b0ba21ed8b4a23ed9b4a2065560a202dab46b10a226d8b4a23ed9b4a20676ff462aa202dab46b15a22ed8b4a23ed9b4a2069560a202dab46b1aa232d8b4a23ed9b422426817691b6a206b01a20ad8b4a236d9b4a202dab46b06a22ad8b4a20ad9b4a2068750472aa202dab46b0ba22ad8b4a20ed9b4a206672a87b1472ba202dab46b10a22ad8b4a212d9b4a2066678671f87624718a202dab46b15a22ad8b4a216d9b4a2066678671f87634767a202dab46b1aa22ad8b4a21ad9b4a206668c678c87644718a202dab4682c69306a346b01a22ad8b4a21ed9b4a206668c6778876547eca202dab46b06a22ad8b4a222d9b4a20666e0866e46c0a202dab46b0ba22ad8b4a236d9b4a206660f86664607a202dab46b10a23ad8b4a21ed9b4a3e860006130f155a3e9f065a2064030a202dab46b15a23ad8b4a216d9b4a3e86689f633f265a2023001a2063103a2063207a206dab46b1aa20ed8b4a23ed9b4124813dc'
+                    }
                 ],
                 rom: '',
 
@@ -121,8 +125,11 @@
             start() {
                 emulator.start();
             },
-            jump() {
+            skip() {
                 cpu.pc+=2;
+            },
+            jump() {
+                cpu.tick();
             },
         }
     }
