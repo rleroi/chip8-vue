@@ -22,25 +22,7 @@ export const emulator = {
 
     init(canvas) {
         video.init(canvas.getContext('2d'));
-
-        const onKeyDown = e => {
-            const index = input.keysDown.findIndex(keymap => e.key === keymap?.qwerty);
-            if(index === -1) {
-                const mappedKey = input.keyMap.find(keymap => e.key === keymap?.qwerty);
-                if(mappedKey) {
-                    input.keysDown.push(mappedKey);
-                }
-            }
-        };
-        window.addEventListener('keydown', onKeyDown)
-
-        const onKeyUp = e => {
-            const index = input.keysDown.findIndex(keymap => e.key === keymap?.qwerty);
-            if(index > -1) {
-                input.keysDown.splice(index, 1);
-            }
-        };
-        window.addEventListener('keyup', onKeyUp)
+        input.bindKeys();
     },
 
     loadRom(rom) {
@@ -51,6 +33,7 @@ export const emulator = {
         cpu.stack.fill(0);
         audio.delayTimer = 0;
         audio.soundTimer = 0;
+        input.boundKeys = [];
         memory.fill(0);
         this.loadFonts();
         video.clearDisplay();
@@ -212,7 +195,7 @@ export const cpu = {
 
         if(!instruction) {
             console.warn('Instruction not yet implemented', opcode.toString(16), instruction);
-            return;
+            return {};
         }
 
         const operands = instruction.operands.map(op => {
@@ -243,6 +226,9 @@ export const cpu = {
         }
 
         instruction.execute(operands);
+
+        // this should actually happen at 60Hz
+        audio.decrementTimers();
     },
 };
 
@@ -312,7 +298,17 @@ export const audio = {
 
     // when non zero, play tone (1 freq only)
     soundTimer: 0,
+
     delayTimer: 0,
+
+    decrementTimers() {
+        if(this.soundTimer > 0) {
+            this.soundTimer--;
+        }
+        if(this.delayTimer > 0) {
+            this.delayTimer--;
+        }
+    }
 };
 
 export const input = {
@@ -338,21 +334,45 @@ export const input = {
 
     keysDown: [],
 
+    boundKeys: [],
+
+    bindKeys() {
+        const onKeyDown = e => {
+            const index = input.keysDown.findIndex(keymap => e.key === keymap?.qwerty);
+            if(index === -1) {
+                const mappedKey = input.keyMap.find(keymap => e.key === keymap?.qwerty);
+                if(mappedKey) {
+                    input.keysDown.push(mappedKey);
+                }
+            }
+        };
+        window.addEventListener('keydown', onKeyDown)
+
+        const onKeyUp = e => {
+            const index = input.keysDown.findIndex(keymap => e.key === keymap?.qwerty);
+            if(index > -1) {
+                input.keysDown.splice(index, 1);
+            }
+        };
+        window.addEventListener('keyup', onKeyUp)
+    },
+
     keyIsDown(key) {
+        const qwertyKey = this.keyMap.find(keymap => key === keymap?.hex)?.qwerty;
+
+        if(!this.boundKeys.includes(qwertyKey)) {
+            this.boundKeys.push();
+        }
+
         return !!this.keysDown.find(keymap => key === keymap?.hex);
     },
 
     waitForKeyDown(register) {
         emulator.pause();
-        console.log('wait for key');
+        console.log('Press any key');
 
         const eventCallback = key => {
-            console.log('key pressed', key);
-            const hexKey = this.keyMap.find(keymap => key === keymap?.qwerty)?.hex;
-
-            console.log('mapped to hex key', hexKey.toString(16));
-
-            cpu.registers[register] = hexKey
+            cpu.registers[register] = this.keyMap.find(keymap => key.key === keymap?.qwerty)?.hex;
             emulator.start();
             window.removeEventListener('keydown', eventCallback);
         };

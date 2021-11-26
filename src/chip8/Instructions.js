@@ -10,7 +10,7 @@ export default [
         id: 'SYS_ADDR',
         name: 'SYS',
         mask: 0xf000, // instruction mask
-        pattern: 0xf000, // instruction pattern
+        pattern: 0x0000, // instruction pattern
         operands: [
             {
                 mask: 0x0FFF,
@@ -18,6 +18,7 @@ export default [
             }
         ],
         execute(operands) {
+            console.log('sys_addr', operands);
             /*
              0nnn - SYS addr
              Jump to a machine code routine at nnn.
@@ -405,9 +406,11 @@ export default [
             let [x, y] = operands;
 
             // if most significant bit is 1, set the carry flag
-            cpu.registers[0xF] = cpu.registers[x] & 0x80;
+            cpu.registers[0xF] = cpu.registers[x] & 0x80 ? 1 : 0;
+            //cpu.registers[0xF] = cpu.registers[x]  >> 7; // this also works but will return the wrong value when overflowing
 
             cpu.registers[x] *= 2;
+            //cpu.registers[x] <<= 1; // same as above
         }
     },
     {
@@ -682,20 +685,12 @@ export default [
             },
         ],
         execute(operands) {
-            // todo: debug, fails test rom: https://github.com/corax89/chip8-test-rom
-            debugger;
-
             let [x] = operands;
 
-            console.log('LD_B_VX before', memory[cpu.i], memory[cpu.i + 1], memory[cpu.i + 2]);
-
             const value = cpu.registers[x].toString();
-            console.log(value);
             memory[cpu.i] = Number(value.charAt(0) || 0);
             memory[cpu.i + 1] = Number(value.charAt(1) || 0);
-            memory[cpu.i + 2] = Number(value.charAt(3) || 0);
-
-            console.log('LD_B_VX after', memory[cpu.i], memory[cpu.i + 1], memory[cpu.i + 2]);
+            memory[cpu.i + 2] = Number(value.charAt(2) || 0);
         }
     },
     {
@@ -710,14 +705,9 @@ export default [
             },
         ],
         execute(operands) {
-            // todo: debug, fails test rom: https://github.com/corax89/chip8-test-rom
-            debugger;
-
-            console.log('LD_I_VX');
-
             let [x] = operands;
 
-            for(let i = 0; i < x; i++) {
+            for(let i = 0; i <= x; i++) {
                 memory[cpu.i + i] = cpu.registers[i];
             }
         }
@@ -736,7 +726,7 @@ export default [
         execute(operands) {
             let [x] = operands;
 
-            for(let i = 0; i < x; i++) {
+            for(let i = 0; i <= x; i++) {
                 cpu.registers[i] = memory[cpu.i + i];
             }
         }
