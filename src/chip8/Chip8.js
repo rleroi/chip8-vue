@@ -361,7 +361,7 @@ export const input = {
         const qwertyKey = this.keyMap.find(keymap => key === keymap?.hex)?.qwerty;
 
         if(!this.boundKeys.includes(qwertyKey)) {
-            this.boundKeys.push();
+            this.boundKeys.push(qwertyKey);
         }
 
         return !!this.keysDown.find(keymap => key === keymap?.hex);

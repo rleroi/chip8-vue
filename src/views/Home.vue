@@ -14,10 +14,32 @@
             </div>
             <div style="margin-left: 1rem;">
                 Key layout:
-                <pre>1 2 3 4</pre>
-                <pre>Q W E R</pre>
-                <pre>A S D F</pre>
-                <pre>Z X C V</pre>
+                <div style="font-family: monospace; font-size: 14pt; margin-bottom: 1rem;">
+                    <div>
+                        <span :class="{bound: input.boundKeys.includes('1')}">1</span>
+                        <span :class="{bound: input.boundKeys.includes('2')}">2</span>
+                        <span :class="{bound: input.boundKeys.includes('3')}">3</span>
+                        <span :class="{bound: input.boundKeys.includes('4')}">4</span>
+                    </div>
+                    <div>
+                        <span :class="{bound: input.boundKeys.includes('q')}">Q</span>
+                        <span :class="{bound: input.boundKeys.includes('w')}">W</span>
+                        <span :class="{bound: input.boundKeys.includes('e')}">E</span>
+                        <span :class="{bound: input.boundKeys.includes('r')}">R</span>
+                    </div>
+                    <div>
+                        <span :class="{bound: input.boundKeys.includes('a')}">A</span>
+                        <span :class="{bound: input.boundKeys.includes('s')}">S</span>
+                        <span :class="{bound: input.boundKeys.includes('d')}">D</span>
+                        <span :class="{bound: input.boundKeys.includes('f')}">F</span>
+                    </div>
+                    <div>
+                        <span :class="{bound: input.boundKeys.includes('z')}">Z</span>
+                        <span :class="{bound: input.boundKeys.includes('x')}">X</span>
+                        <span :class="{bound: input.boundKeys.includes('c')}">C</span>
+                        <span :class="{bound: input.boundKeys.includes('v')}">V</span>
+                    </div>
+                </div>
 
                 <div>
                     ROMs:
@@ -47,6 +69,9 @@
                 {{emulator.currentTick.operands.join(', ')}}
             </pre>
 
+            <h3 @click="showBoundKeys = !showBoundKeys">BoundKeys</h3>
+            <pre v-if="showBoundKeys">{{input.boundKeys}}</pre>
+
             <h3 @click="showKeysDown = !showKeysDown">KeysDown</h3>
             <pre v-if="showKeysDown">{{input.keysDown}}</pre>
 
@@ -73,6 +98,10 @@
             return {
                 roms: [
                     {
+                        name: 'Connect 4',
+                        rom: '121a434f4e4e454354342062792044617669642057494e544552a2bbf665a2b4f655690068016b006d0f6e1fa2a5600d61326200d02fd12f720f321e1234d021d1217201600aa29fd021d121a29fdde1fc0adde14c05127e3c04126a7bff7dfb3d0a127a6b066d2d127a3c0612987b017d053d32127a6b006d0fdde11250a2b4fb1ef06540fc12988a0070fbf0558983a29e3900a2a1dda4a29fdde1125060f0f0609090608080808080808080808080808080801a1a1a1a1a1a1a1a1a1a1a1a1a1a',
+                        info: 'Q = left, E = right, W = drop coin.'
+                    }, {
                         name: 'Breakout',
                         rom: '6e0565006b066a00a30cdab17a043a4012087b023b1212066c206d1fa310dcd122f660006100a312d0117008a30ed0116040f015f00730001234c60f671e680169ffa30ed671a310dcd16004e0a17cfe6006e0a17c02603f8c02dcd1a30ed67186848794603f8602611f8712471f12ac46006801463f68ff47006901d6713f0112aa471f12aa600580753f0012aa6001f018806061fc8012a30cd07160fe890322f6750122f6456012de124669ff806080c53f0112ca610280153f0112e080153f0112ee80153f0112e86020f018a30e7eff80e080046100d0113e00123012de78ff48fe68ff12ee7801480268016004f01869ff1270a314f533f265f12963376400d3457305f229d34500eef0008000fc00aa0000000000',
                     }, {
@@ -97,6 +126,7 @@
                 showDebug: false,
                 showRom: false,
                 showKeysDown: false,
+                showBoundKeys: false,
                 showCurrentTick: true,
                 showCpu: false,
                 showMemory: false,
@@ -168,5 +198,11 @@
         width: 512px;
         height: 256px;
         image-rendering: pixelated;
+    }
+
+    .bound {
+        background-color: #000;
+        color: #fff;
+        border-radius: 3px;
     }
 </style>

@@ -7,27 +7,6 @@ import {cpu, memory, audio, video, input, emulator} from './Chip8';
 // https://github.com/taniarascia/chip8/blob/9d2e713a8962add2ccf75cc4b99bd7a010c5b220/classes/CPU.js
 export default [
     {
-        id: 'SYS_ADDR',
-        name: 'SYS',
-        mask: 0xf000, // instruction mask
-        pattern: 0x0000, // instruction pattern
-        operands: [
-            {
-                mask: 0x0FFF,
-                shift: 0,
-            }
-        ],
-        execute(operands) {
-            console.log('sys_addr', operands);
-            /*
-             0nnn - SYS addr
-             Jump to a machine code routine at nnn.
-
-             This instruction is only used on the old computers on which Chip-8 was originally implemented. It is ignored by modern interpreters.
-             */
-        }
-    },
-    {
         id: 'CLS',
         name: 'CLS',
         mask: 0xffff, // instruction mask
@@ -729,6 +708,27 @@ export default [
             for(let i = 0; i <= x; i++) {
                 cpu.registers[i] = memory[cpu.i + i];
             }
+        }
+    },
+    {
+        id: 'SYS_ADDR',
+        name: 'SYS',
+        mask: 0xf000, // instruction mask
+        pattern: 0x0000, // instruction pattern
+        operands: [
+            {
+                mask: 0x0FFF,
+                shift: 0,
+            }
+        ],
+        execute(operands) {
+            console.log('sys_addr', operands);
+            /*
+             0nnn - SYS addr
+             Jump to a machine code routine at nnn.
+
+             This instruction is only used on the old computers on which Chip-8 was originally implemented. It is ignored by modern interpreters.
+             */
         }
     },
 ]
