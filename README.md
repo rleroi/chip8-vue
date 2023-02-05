@@ -1,7 +1,9 @@
 # chip8-vue
-<img width="762" alt="image" src="https://user-images.githubusercontent.com/6817390/158575964-4ae178c4-94f1-42bb-98ae-0420bbf435f1.png">
 
 Try it out in your browser: https://chip8.iorel.nl/
+
+![image](https://user-images.githubusercontent.com/6817390/216839020-0aa3105c-8e85-4516-a7d9-7cb9e871c4d1.png)
+
 
 ## Project setup
 ```
